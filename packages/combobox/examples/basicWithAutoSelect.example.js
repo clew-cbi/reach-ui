@@ -9,7 +9,7 @@ import {
 import { useCityMatch } from "./utils";
 import "@reach/combobox/styles.css";
 
-let name = "Basic";
+let name = "Basic With Auto-select first option";
 
 function Example() {
   let [term, setTerm] = React.useState("");
@@ -23,9 +23,9 @@ function Example() {
     <div>
       <h2>Clientside Search</h2>
       <Combobox
-        autoSelectMatchingInput
         id="holy-smokes"
         aria-label="choose a city"
+        autoSelectFirstOption={true}
       >
         <ComboboxInput onChange={handleChange} style={inputStyle} />
         {results && (
@@ -49,9 +49,8 @@ function Example() {
 }
 
 Example.storyName = name;
-export { Example };
-
-////////////////////////////////////////////////////////////////////////////////
+export const BasicWithAutoSelect = Example;
+export default { title: "combobox" };
 
 const inputStyle = {
   width: 400,

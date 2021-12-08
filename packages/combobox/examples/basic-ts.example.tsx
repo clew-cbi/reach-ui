@@ -22,7 +22,11 @@ function Example() {
   return (
     <div>
       <h2>Clientside Search</h2>
-      <Combobox id="holy-smokes" aria-label="choose a city">
+      <Combobox
+        autoSelectFirstOption
+        id="holy-smokes"
+        aria-label="choose a city"
+      >
         <ComboboxInput
           name="awesome"
           onChange={handleChange}
