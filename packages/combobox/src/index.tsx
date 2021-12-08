@@ -173,7 +173,7 @@ const reducer: Reducer = (data: StateData, event: MachineEvent) => {
       return {
         ...nextState,
         navigationValue: findNavigationValue(nextState, event),
-        // value: data.value,
+        value: data.value,
       };
     case CLEAR:
       return {
@@ -476,6 +476,8 @@ export const ComboboxInput = React.forwardRef(
       ariaLabelledby,
       persistSelectionRef,
       isControlledRef,
+      autoSelectMatchingInput,
+      autoSelectFirstOption,
     } = React.useContext(ComboboxContext);
 
     let ref = useComposedRefs(inputRef, forwardedRef);
@@ -580,11 +582,27 @@ export const ComboboxInput = React.forwardRef(
       }
     }
 
+    const getInputValue = () => {
+      if (autoSelectFirstOption || autoSelectMatchingInput) {
+        return controlledValue || value;
+      } else {
+        return navigationValue || controlledValue || value;
+      }
+    };
+
     let inputValue =
       autocomplete && (state === NAVIGATING || state === INTERACTING)
         ? // When idle, we don't have a navigationValue on ArrowUp/Down
-          controlledValue || value
+          getInputValue()
         : controlledValue || value;
+
+    React.useEffect(() => {
+      if (autoSelectFirstOption && !autoSelectMatchingInput) {
+        transition(NAVIGATE, {
+          value: null,
+        });
+      }
+    }, [value]);
 
     return (
       <Comp
@@ -847,11 +865,9 @@ export const ComboboxOption = React.forwardRef(
     };
 
     /*
-     * As soon as current option's value ischanged, we will check if its index is zero
-     * and if autoSelectFirstOption is true. If yes, that option is will be automatically
-     * highlighted i.e navigationValue will be changed.
+     * When the value or the input value changes we will auto highlight either the matching option
+     * or the the first option in the list.
      * */
-
     React.useEffect(() => {
       if (
         dataValue.toLowerCase() === value.toLowerCase() &&
@@ -862,11 +878,9 @@ export const ComboboxOption = React.forwardRef(
         });
       }
     }, [dataValue]);
+
     React.useEffect(() => {
-      console.log({ index, value, indexProp });
       if (index === 0 && autoSelectFirstOption && !autoSelectMatchingInput) {
-        console.log({ index, value, navigationValue, inputValue, dataValue });
-        console.log("transitioning autoSelectFirstOption");
         transition(NAVIGATE, {
           value,
         });
