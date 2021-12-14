@@ -1,3 +1,10 @@
+# CB Insights Reach UI Fork
+
+What has been changed?
+
+- Option to auto highlight the first option in the combobox
+- Option to auto highlight matching option for combobox
+
 # Welcome to Reach UI Development ♿️
 
 Thanks for getting involved with Reach UI development!
